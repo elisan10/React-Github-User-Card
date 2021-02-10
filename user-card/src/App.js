@@ -1,5 +1,7 @@
 import React from "react";
 import "./App.css";
+import axios from "axios";
+import Users from "./components/Users";
 
 // API: "https://api.github.com/users/elisan10"
 
@@ -40,12 +42,38 @@ import "./App.css";
 // }
 
 class App extends React.Component {
+  state = {
+    users: [],
+  };
+
+  componentDidMount() {
+    axios
+      .get("https://api.github.com/users/elisan10")
+      .then((res) => {
+        console.log("This is users data", res);
+        this.setState({ users: [res.data] });
+      })
+      .catch((err) =>
+        console.log(
+          "Something went wrong with your api call for user data",
+          err
+        )
+      );
+  }
+
   render() {
+    // console.log(this.state.users);
     return (
       <div className="App">
         <header className="App-header">
           <h1>Welcome to Eli's App</h1>
-          {/* <pre>{JSON.stringify()}</pre> */}
+          <div className="users">
+            {this.state.users.map((user) => {
+              // console.log(user.login);
+              return <Users user={user} />;
+            })}
+          </div>
+          {/* <pre>{JSON.stringify(this.state.users, null, 2)}</pre> */}
         </header>
       </div>
     );
